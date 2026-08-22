@@ -1,6 +1,7 @@
 .idea
-
-
+target
+*.log
+.DS_Store
 # Environment / secrets
 .env
 application-local.properties

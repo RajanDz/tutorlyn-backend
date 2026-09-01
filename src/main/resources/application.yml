@@ -9,6 +9,8 @@ spring:
 
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: validate
 app:
   jwtSecret: ${JWT_SECRET}
   jwtExpirationMs: ${JWT_EXPIRATION_MS}

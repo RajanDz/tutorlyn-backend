@@ -17,7 +17,7 @@ public class JwtUtils {
 
     @Value("${app.jwtSecret}")
     private String jwtSecret;
-    @Value("${app.expirationMS}")
+    @Value("${app.jwtExpirationMs}")
     private long expirationMs;
     @Value("${app.authAccessTokenCookie}")
     private String accessTokenCookieName;

@@ -9,3 +9,7 @@ spring:
 
   jpa:
     show-sql: true
+app:
+  jwtSecret: ${JWT_SECRET}
+  jwtExpirationMs: ${JWT_EXPIRATION_MS}
+  authAccessTokenCookie: ${access_token_cookie}

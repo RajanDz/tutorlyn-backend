@@ -1,6 +1,5 @@
-package com.tutorlyn.tutorlyn.service;
+package com.tutorlyn.tutorlyn.security.user;
 
-import com.tutorlyn.tutorlyn.security.CustomUserDetails;
 import com.tutorlyn.tutorlyn.user.User;
 import com.tutorlyn.tutorlyn.user.UserRepository;
 import lombok.AllArgsConstructor;

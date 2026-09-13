@@ -1,4 +1,4 @@
-package com.tutorlyn.tutorlyn.security;
+package com.tutorlyn.tutorlyn.security.user;
 
 import lombok.AllArgsConstructor;
 import org.jspecify.annotations.Nullable;

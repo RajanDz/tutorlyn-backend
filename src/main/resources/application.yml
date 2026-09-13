@@ -6,12 +6,13 @@ spring:
     url: jdbc:mysql://localhost:3306/tutorlyn
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
 app:
-  jwtSecret: ${JWT_SECRET}
-  jwtExpirationMs: ${JWT_EXPIRATION_MS}
-  authAccessTokenCookie: ${access_token_cookie}
+    jwtSecret: ${JWT_SECRET}
+    jwtExpirationMs: ${JWT_EXPIRATION_MS}
+    authAccessTokenCookie: ${access_token_cookie}

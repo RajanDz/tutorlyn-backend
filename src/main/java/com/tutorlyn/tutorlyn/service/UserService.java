@@ -30,7 +30,7 @@ public class UserService {
                 throw new IllegalArgumentException("This email already exist!");
             }
 
-            Role role = roleRepository.findByName(registrationRequest.role())
+            Role role = roleRepository.findByName(registrationRequest.role().toString())
                     .orElseThrow(() -> new IllegalArgumentException("Role not found " + registrationRequest.role().toString()));
             Set<Role> roles = new HashSet<>(Set.of(role));
             User user = User.createUser(registrationRequest,passwordEncoder.encode(registrationRequest.password()),roles);

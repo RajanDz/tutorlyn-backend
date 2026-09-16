@@ -32,12 +32,10 @@ public class UserServiceTest {
     @Test
     void  roleNotFound(){
         RegistrationRequest registrationRequest = TestDataFactory.registrationRequestData();
-        User existingUser = TestDataFactory.createUser();
-            when(roleRepository.findByName(registrationRequest.role()))
-                    .thenReturn(Optional.empty());
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> userService.registration(registrationRequest));
-
-            assertEquals("Role not found " + UserRole.STUDENT, exception.getMessage());
+        when(roleRepository.findByName(registrationRequest.role().toString()))
+                .thenReturn(Optional.empty());
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,() -> userService.registration(registrationRequest));
+        assertEquals("Role not found " + UserRole.STUDENT, exception.getMessage());
     }
 
     @Test

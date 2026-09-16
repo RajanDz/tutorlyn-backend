@@ -19,7 +19,7 @@ public class TutorlynApplicationTest {
 
     @Test
     void createRole(){
-        Role role = new Role(UserRole.STUDENT);
+        Role role = new Role(UserRole.STUDENT.toString());
         roleRepository.save(role);
         logger.info("Role created: {}", role.getName());
     }

@@ -24,14 +24,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     public UserResponse registration(RegistrationRequest registrationRequest){
             if (userRepository.findByUsername(registrationRequest.username()).isPresent()){
-                throw new RuntimeException("This username already exist!");
+                throw new IllegalArgumentException("This username already exist!");
             }
             if (userRepository.findByEmail(registrationRequest.email()).isPresent()){
-                throw new RuntimeException("This email already exist!");
+                throw new IllegalArgumentException("This email already exist!");
             }
 
-            Role role = roleRepository.findByName(registrationRequest.role().toString())
-                    .orElseThrow(() -> new RuntimeException("Role not found " + registrationRequest.role().toString()));
+            Role role = roleRepository.findByName(registrationRequest.role())
+                    .orElseThrow(() -> new IllegalArgumentException("Role not found " + registrationRequest.role().toString()));
             Set<Role> roles = new HashSet<>(Set.of(role));
             User user = User.createUser(registrationRequest,passwordEncoder.encode(registrationRequest.password()),roles);
             userRepository.save(user);

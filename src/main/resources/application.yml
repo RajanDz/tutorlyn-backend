@@ -13,6 +13,6 @@ spring:
     hibernate:
       ddl-auto: update
 app:
-    jwtSecret: ${JWT_SECRET}
-    jwtExpirationMs: ${JWT_EXPIRATION_MS}
-    authAccessTokenCookie: ${access_token_cookie}
+    jwtSecret: ${JWT_SECRET:"23232sdsssfaa41rfssaf32423fsaf235"}
+    jwtExpirationMs: ${JWT_EXPIRATION_MS:3000}
+    authAccessTokenCookie: ${access_token_cookie:"Rajolica"}

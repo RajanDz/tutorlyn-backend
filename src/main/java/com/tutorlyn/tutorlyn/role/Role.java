@@ -13,8 +13,10 @@ import java.time.Instant;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Role {
+    public Role(String name) {
+        this.name = name;
+    }
 
     @Id
     @Column(name = "id")

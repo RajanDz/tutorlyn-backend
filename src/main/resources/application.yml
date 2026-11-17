@@ -16,3 +16,4 @@ app:
     jwtSecret: ${JWT_SECRET}
     jwtExpirationMs: ${JWT_EXPIRATION_MS}
     authAccessTokenCookie: ${access_token_cookie}
+    refreshTokenExiprationMs: ${refresh_token_expiration_ms}

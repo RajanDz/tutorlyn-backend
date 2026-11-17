@@ -25,6 +25,19 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
+    public User(String firstName, String lastName, String email, String password, String phoneNumber, LocalDate dateOfBirth, String countryCode, String city, String timezone,  Set<Role> roles) {
+        this.id = UUID.randomUUID();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.dateOfBirth = dateOfBirth;
+        this.countryCode = countryCode;
+        this.city = city;
+        this.timezone = timezone;
+        this.roles = roles;
+    }
 
     public User(String firstName, String lastName, String username, String email, String password, String phoneNumber, LocalDate dateOfBirth, String countryCode, String city, String timezone, Set<Role> roles) {
         this.id = UUID.randomUUID();
@@ -42,7 +55,7 @@ public class User {
     }
 
     @Id
-    @Column(name = "id", length = 36)
+    @Column(name = "id", length = 16)
     private UUID id;
 
     @Column(name = "first_name",nullable = false,length = 100)

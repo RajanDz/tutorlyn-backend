@@ -42,7 +42,7 @@ public class User {
     }
 
     @Id
-    @Column(name = "id", length = 36)
+    @Column(name = "id", length = 16)
     private UUID id;
 
     @Column(name = "first_name",nullable = false,length = 100)

@@ -1,10 +1,9 @@
-package com.tutorlyn.tutorlyn.refreshToken;
+package com.tutorlyn.tutorlyn.refreshtoken;
 
 
 import com.tutorlyn.tutorlyn.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -44,5 +43,9 @@ public class RefreshToken {
         this.user = user;
         this.tokenHash = tokenHash;
         this.expiryDate = expiryDate;
+    }
+
+    public void revokeToken(){
+        this.revokedAt = Instant.now();
     }
 }

@@ -2,19 +2,13 @@ package com.tutorlyn.tutorlyn;
 
 import com.tutorlyn.tutorlyn.role.Role;
 import com.tutorlyn.tutorlyn.role.RoleRepository;
-import com.tutorlyn.tutorlyn.user.User;
 import com.tutorlyn.tutorlyn.user.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @SpringBootTest(classes = TutorlynApplication.class)
 class TutorlynApplicationTests {
@@ -33,27 +27,28 @@ class TutorlynApplicationTests {
 
 	@Test
 	void createRole(){
-		Role role = new Role("Admin");
+		Role role = new Role("PROFESSOR");
 		roleRepository.save(role);
+		logger.info("Role created: {}", role.getName());
 	}
 
-	@Test
-	void createUser(){
-		Role role = roleRepository.findById(1).orElseThrow();
-		Set<Role> roles = new HashSet<>();
-		roles.add(role);
-		User user = new User(
-				"Rajan",
-				"Dzaferadzovic",
-				"dzaferadzovicrajan@gmail.com",
-				passwordEncoder.encode("PgSator05"),
-				"067155370",
-				LocalDate.of(2005,5,2),
-				"ME",
-				"Podgorica",
-				"EU",
-				roles
-		);
-		userRepository.save(user);
-	}
+//	@Test
+//	void createUser(){
+//		Role role = roleRepository.findById(1).orElseThrow();
+//		Set<Role> roles = new HashSet<>();
+//		roles.add(role);
+//		User user = new User(
+//				"Rajan",
+//				"Dzaferadzovic",
+//				"dzaferadzovicrajan@gmail.com",
+//				passwordEncoder.encode("PgSator05"),
+//				"067155370",
+//				LocalDate.of(2005,5,2),
+//				"ME",
+//				"Podgorica",
+//				"EU",
+//				roles
+//		);
+//		userRepository.save(user);
+//	}
 }

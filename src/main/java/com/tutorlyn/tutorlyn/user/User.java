@@ -5,17 +5,13 @@ import com.tutorlyn.tutorlyn.dto.RegistrationRequest;
 import com.tutorlyn.tutorlyn.role.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -92,8 +88,8 @@ public class User {
 
     public static User createUser(RegistrationRequest registrationRequest,String hashedPassword,Set<Role> roles){
         return new User(
-                registrationRequest.firstName(),
-                registrationRequest.lastName(),
+                registrationRequest.firstname(),
+                registrationRequest.lastname(),
                 registrationRequest.username(),
                 registrationRequest.email(),
                 hashedPassword,

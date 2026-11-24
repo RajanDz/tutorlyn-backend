@@ -1,5 +1,6 @@
 package com.tutorlyn.tutorlyn.security.user;
 
+import com.tutorlyn.tutorlyn.user.User;
 import lombok.AllArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.tutorlyn.tutorlyn.user.User;
 
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {

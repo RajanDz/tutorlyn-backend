@@ -3,7 +3,6 @@ package com.tutorlyn.tutorlyn.service;
 
 import com.tutorlyn.tutorlyn.dto.RegistrationRequest;
 import com.tutorlyn.tutorlyn.dto.UserResponse;
-import com.tutorlyn.tutorlyn.dto.UserRole;
 import com.tutorlyn.tutorlyn.role.Role;
 import com.tutorlyn.tutorlyn.role.RoleRepository;
 import com.tutorlyn.tutorlyn.user.User;
@@ -22,6 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+
     public UserResponse registration(RegistrationRequest registrationRequest){
             if (userRepository.findByUsername(registrationRequest.username()).isPresent()){
                 throw new RuntimeException("This username already exist!");
@@ -36,5 +36,9 @@ public class UserService {
             User user = User.createUser(registrationRequest,passwordEncoder.encode(registrationRequest.password()),roles);
             userRepository.save(user);
             return new UserResponse(user.getId(),user.getUsername(),user.getEmail());
+    }
+
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }

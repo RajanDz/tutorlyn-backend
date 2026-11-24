@@ -14,6 +14,7 @@ spring:
       ddl-auto: update
 app:
     jwtSecret: ${JWT_SECRET}
-    jwtExpirationMs: ${JWT_EXPIRATION_MS}
-    authAccessTokenCookie: ${access_token_cookie}
-    refreshTokenExiprationMs: ${refresh_token_expiration_ms}
+    accessTokenCookie: ${ACCESS_TOKEN_COOKIE}
+    accessTokenExpirationMs: ${JWT_EXPIRATION_MS}
+    refreshTokenCookie: ${REFRESH_TOKEN_COOKIE}
+    refreshTokenExpirationMs: ${REFRESH_TOKEN_EXPIRATION_MS}

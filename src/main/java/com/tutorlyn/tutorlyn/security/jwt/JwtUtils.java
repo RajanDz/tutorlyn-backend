@@ -5,9 +5,11 @@
     import io.jsonwebtoken.MalformedJwtException;
     import io.jsonwebtoken.UnsupportedJwtException;
     import io.jsonwebtoken.io.Decoders;
+    import io.jsonwebtoken.security.Keys;
     import io.jsonwebtoken.security.SignatureException;
     import jakarta.servlet.http.Cookie;
     import jakarta.servlet.http.HttpServletRequest;
+    import lombok.RequiredArgsConstructor;
     import org.slf4j.Logger;
     import org.slf4j.LoggerFactory;
     import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +17,8 @@
     import org.springframework.security.core.Authentication;
     import org.springframework.security.core.userdetails.UserDetails;
     import org.springframework.stereotype.Component;
-    import io.jsonwebtoken.security.Keys;
     import org.springframework.web.util.WebUtils;
+
     import javax.crypto.SecretKey;
     import java.security.Key;
     import java.time.Duration;
@@ -24,23 +26,29 @@
     import java.util.Date;
 
     @Component
+    @RequiredArgsConstructor
     public class JwtUtils {
 
         private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-
         @Value("${app.jwtSecret}")
         private String jwtSecret;
-        @Value("${app.jwtExpirationMs}")
-        private long expirationMs;
-        @Value("${app.authAccessTokenCookie}")
+        @Value("${app.accessTokenCookie}")
         private String accessTokenCookieName;
+        @Value("${app.accessTokenExpirationMs}")
+        private long expirationMs;
+        @Value("${refresh_token_cookie}")
+        private String refreshTokenCookie;
+        @Value("${app.refreshTokenExpirationMs}")
+        private long refreshTokenExpirationMs;
+
+
 
         private Key key(){
             return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
         }
 
-        public ResponseCookie generateAuthCookie(Authentication authentication){
-            String jwt = generateToken(authentication);
+        public ResponseCookie generateAccessToken(String username){
+            String jwt = generateToken(username);
             return ResponseCookie
                     .from(accessTokenCookieName,jwt)
                     .path("/")
@@ -50,11 +58,19 @@
                     .httpOnly(true)
                     .build();
         }
-
-        private String generateToken(Authentication authentication){
-            UserDetails user = (UserDetails) authentication.getPrincipal();
+        public ResponseCookie generateRefreshToken(String rawRefreshTokn){
+            return ResponseCookie
+                    .from(refreshTokenCookie,rawRefreshTokn)
+                    .path("/api/v1/auth")
+                    .secure(false)
+                    .sameSite("Lax")
+                    .maxAge(Duration.ofMillis(refreshTokenExpirationMs))
+                    .httpOnly(true)
+                    .build();
+        }
+        private String generateToken(String username){
             return Jwts.builder()
-                    .subject(user.getUsername())
+                    .subject(username)
                     .issuedAt(Date.from(Instant.now()))
                     .expiration(Date.from(Instant.now().plusMillis(expirationMs)))
                     .signWith(key())

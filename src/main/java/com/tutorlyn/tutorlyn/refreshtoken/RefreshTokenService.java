@@ -2,6 +2,7 @@ package com.tutorlyn.tutorlyn.refreshtoken;
 
 
 import com.tutorlyn.tutorlyn.dto.RotatedToken;
+import com.tutorlyn.tutorlyn.exception.InvalidRefreshTokenException;
 import com.tutorlyn.tutorlyn.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,9 +55,13 @@ public class RefreshTokenService {
     @Transactional
     public RotatedToken rotation(String rawToken){
         RefreshToken token = refreshTokenRepository.findByTokenHash(hash(rawToken)).orElseThrow(() -> new IllegalArgumentException("Token not found"));
-        if (token.getExpiryDate().isBefore(Instant.now()) || token.getRevokedAt() != null){
-            throw new IllegalStateException("Token has expired");
+        if (token.getExpiryDate().isBefore(Instant.now())){
+            throw new InvalidRefreshTokenException("Token expired");
         }
+        if (token.getRevokedAt() != null){
+            throw new InvalidRefreshTokenException("Token revoked");
+        }
+
         token.revokeToken();
         String rotatedToken = createRefreshToken(token.getUser());
         return new RotatedToken(rotatedToken,token.getUser().getUsername());

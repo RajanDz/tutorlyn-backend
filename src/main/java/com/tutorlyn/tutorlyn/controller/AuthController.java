@@ -4,6 +4,7 @@ import com.tutorlyn.tutorlyn.dto.RegistrationRequest;
 import com.tutorlyn.tutorlyn.dto.RotatedToken;
 import com.tutorlyn.tutorlyn.dto.SignInRequest;
 import com.tutorlyn.tutorlyn.dto.UserResponse;
+import com.tutorlyn.tutorlyn.exception.InvalidRefreshTokenException;
 import com.tutorlyn.tutorlyn.refreshtoken.RefreshTokenService;
 import com.tutorlyn.tutorlyn.security.jwt.JwtUtils;
 import com.tutorlyn.tutorlyn.service.UserService;
@@ -62,7 +63,7 @@ public class AuthController {
     public ResponseEntity<Void> refresh(HttpServletRequest request){
         Cookie cookie = WebUtils.getCookie(request,refreshTokenCookie);
         if (cookie == null){
-            throw new IllegalArgumentException("Token not found");
+            throw new InvalidRefreshTokenException("Refresh token missing");
         }
         String rawToken = cookie.getValue();
         RotatedToken rotatedToken = refreshTokenService.rotation(rawToken);

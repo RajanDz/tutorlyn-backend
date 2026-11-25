@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -27,12 +28,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String token = jwtUtils.getJwtFromCookie(request);
         if (token != null && jwtUtils.validateJwtToken(token)){
             String username = jwtUtils.getUsernameFromToken(token);
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            logger.info("Context succesfully populated.");
+            try {
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                logger.debug("Context successfully populated.");
+            } catch (UsernameNotFoundException e) {
+                logger.warn("User from valid token no longer exist: " + username);
+            }
         } else {
-            logger.info("Token not valid");
+            logger.debug("Token not valid");
         }
         filterChain.doFilter(request,response);
     }

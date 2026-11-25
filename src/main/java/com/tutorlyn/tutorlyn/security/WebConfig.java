@@ -36,7 +36,7 @@ public class WebConfig {
                 .exceptionHandling(e -> e.authenticationEntryPoint(
                         new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
                 ))
-                .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**").permitAll()
+                .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**", "/error").permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);

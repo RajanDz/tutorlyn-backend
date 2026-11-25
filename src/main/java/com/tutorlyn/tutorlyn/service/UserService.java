@@ -3,6 +3,7 @@ package com.tutorlyn.tutorlyn.service;
 
 import com.tutorlyn.tutorlyn.dto.RegistrationRequest;
 import com.tutorlyn.tutorlyn.dto.UserResponse;
+import com.tutorlyn.tutorlyn.exception.UserAlreadyExistsException;
 import com.tutorlyn.tutorlyn.role.Role;
 import com.tutorlyn.tutorlyn.role.RoleRepository;
 import com.tutorlyn.tutorlyn.user.User;
@@ -24,10 +25,10 @@ public class UserService {
 
     public UserResponse registration(RegistrationRequest registrationRequest){
             if (userRepository.findByUsername(registrationRequest.username()).isPresent()){
-                throw new RuntimeException("This username already exist!");
+                throw new UserAlreadyExistsException("This username already exists!");
             }
             if (userRepository.findByEmail(registrationRequest.email()).isPresent()){
-                throw new RuntimeException("This email already exist!");
+                throw new UserAlreadyExistsException("This email already exists!");
             }
 
             Role role = roleRepository.findByName(registrationRequest.role().toString())

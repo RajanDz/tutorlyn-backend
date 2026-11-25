@@ -40,7 +40,7 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtils jwtUtils;
     private final RefreshTokenService refreshTokenService;
-    @PostMapping("/registration")
+    @PostMapping("/signup")
     public ResponseEntity<UserResponse> registration(@Valid @RequestBody RegistrationRequest registrationRequest){
         UserResponse user = userService.registration(registrationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);

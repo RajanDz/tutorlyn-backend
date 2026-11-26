@@ -66,4 +66,10 @@ public class RefreshTokenService {
         String rotatedToken = createRefreshToken(token.getUser());
         return new RotatedToken(rotatedToken,token.getUser().getUsername());
     }
+
+    @Transactional
+    public void revokeTokenOnLogout(String rawToken){
+        refreshTokenRepository.findByTokenHash(hash(rawToken)).ifPresent(RefreshToken::revokeToken);
+    }
 }
+

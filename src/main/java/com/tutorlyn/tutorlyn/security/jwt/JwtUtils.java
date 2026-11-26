@@ -35,7 +35,7 @@
         @Value("${app.accessTokenCookie}")
         private String accessTokenCookieName;
         @Value("${app.accessTokenExpirationMs}")
-        private long expirationMs;
+        private long accessTokenExpirationMs;
         @Value("${refresh_token_cookie}")
         private String refreshTokenCookie;
         @Value("${app.refreshTokenExpirationMs}")
@@ -47,32 +47,35 @@
             return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
         }
 
-        public ResponseCookie generateAccessToken(String username){
-            String jwt = generateToken(username);
+        private ResponseCookie buildCookie(String name,String value,String path, Duration maxAge){
             return ResponseCookie
-                    .from(accessTokenCookieName,jwt)
-                    .path("/")
-                    .secure(false) // secure will be false while we are testing it on localhost
+                    .from(name,value)
+                    .path(path)
+                    .secure(false)
                     .sameSite("Lax")
-                    .maxAge(Duration.ofMillis(expirationMs))
+                    .maxAge(maxAge)
                     .httpOnly(true)
                     .build();
         }
-        public ResponseCookie generateRefreshToken(String rawRefreshTokn){
-            return ResponseCookie
-                    .from(refreshTokenCookie,rawRefreshTokn)
-                    .path("/api/v1/auth")
-                    .secure(false)
-                    .sameSite("Lax")
-                    .maxAge(Duration.ofMillis(refreshTokenExpirationMs))
-                    .httpOnly(true)
-                    .build();
+
+        public ResponseCookie generateAccessToken(String username){
+            return buildCookie(accessTokenCookieName, generateToken(username),"/",Duration.ofMillis(accessTokenExpirationMs));
+        }
+
+        public ResponseCookie clearAccessCookie(){
+            return buildCookie(accessTokenCookieName,"","/",Duration.ZERO);
+        }
+        public ResponseCookie generateRefreshToken(String rawRefreshToken){
+            return buildCookie(refreshTokenCookie,rawRefreshToken,"/api/v1/auth",Duration.ofMillis(refreshTokenExpirationMs));
+        }
+        public ResponseCookie clearRefreshCookie(){
+            return buildCookie(refreshTokenCookie,"","/api/v1/auth",Duration.ZERO);
         }
         private String generateToken(String username){
             return Jwts.builder()
                     .subject(username)
                     .issuedAt(Date.from(Instant.now()))
-                    .expiration(Date.from(Instant.now().plusMillis(expirationMs)))
+                    .expiration(Date.from(Instant.now().plusMillis(accessTokenExpirationMs)))
                     .signWith(key())
                     .compact();
         }
@@ -86,6 +89,7 @@
             if (cookie == null) return null;
             return cookie.getValue();
         }
+
         public boolean validateJwtToken(String authToken) {
             try {
                 Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);

@@ -74,4 +74,19 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE,refreshToken.toString())
                 .build();
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request){
+        Cookie cookie = WebUtils.getCookie(request,refreshTokenCookie);
+        if (cookie != null){
+            refreshTokenService.revokeTokenOnLogout(cookie.getValue());
+        }
+        ResponseCookie accessToken = jwtUtils.clearAccessCookie();
+        ResponseCookie refreshToken = jwtUtils.clearRefreshCookie();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,accessToken.toString())
+                .header(HttpHeaders.SET_COOKIE,refreshToken.toString())
+                .build();
+    }
+
 }

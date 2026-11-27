@@ -55,11 +55,11 @@ public class RefreshTokenService {
     @Transactional
     public RotatedToken rotation(String rawToken){
         RefreshToken token = refreshTokenRepository.findByTokenHash(hash(rawToken)).orElseThrow(() -> new InvalidRefreshTokenException("Token not found"));
-        if (token.getExpiryDate().isBefore(Instant.now())){
-            throw new InvalidRefreshTokenException("Token expired");
-        }
         if (token.getRevokedAt() != null){
             throw new InvalidRefreshTokenException("Token revoked");
+        }
+        if (token.getExpiryDate().isBefore(Instant.now())){
+            throw new InvalidRefreshTokenException("Token expired");
         }
 
         token.revokeToken();

@@ -36,7 +36,7 @@
         private String accessTokenCookieName;
         @Value("${app.accessTokenExpirationMs}")
         private long accessTokenExpirationMs;
-        @Value("${refresh_token_cookie}")
+        @Value("${app.refreshTokenCookie}")
         private String refreshTokenCookie;
         @Value("${app.refreshTokenExpirationMs}")
         private long refreshTokenExpirationMs;

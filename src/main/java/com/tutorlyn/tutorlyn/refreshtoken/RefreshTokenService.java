@@ -5,6 +5,7 @@ import com.tutorlyn.tutorlyn.dto.RotatedToken;
 import com.tutorlyn.tutorlyn.exception.InvalidRefreshTokenException;
 import com.tutorlyn.tutorlyn.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.HexFormat;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
@@ -52,10 +54,12 @@ public class RefreshTokenService {
         }
     }
 
-    @Transactional
+    @Transactional(noRollbackFor = InvalidRefreshTokenException.class)
     public RotatedToken rotation(String rawToken){
         RefreshToken token = refreshTokenRepository.findByTokenHash(hash(rawToken)).orElseThrow(() -> new InvalidRefreshTokenException("Token not found"));
         if (token.getRevokedAt() != null){
+            int revokedTokens = refreshTokenRepository.revokeAllActiveByUser(token.getUser(),Instant.now());
+            log.warn("Refresh token reuse detected for user: {}, revoked {} active tokens", token.getUser().getUsername(), revokedTokens);
             throw new InvalidRefreshTokenException("Token revoked");
         }
         if (token.getExpiryDate().isBefore(Instant.now())){
